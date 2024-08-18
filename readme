@@ -1,0 +1,14 @@
+README
+Overview
+This repository contains scripts and tools to demonstrate and test common web vulnerabilities, specifically focusing on Cross-Site Scripting (XSS), Broken Authentication, and Session Management. These vulnerabilities are critical issues in web security, and understanding them is essential for developing secure web applications.
+
+Vulnerabilities Covered
+1. Cross-Site Scripting (XSS)
+Description:
+Cross-Site Scripting (XSS) is a vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. These scripts can be used to steal cookies, session tokens, or other sensitive information, and even redirect users to malicious websites.
+2. Broken Authentication
+Description:
+Broken authentication occurs when an application’s authentication mechanisms are poorly implemented, allowing attackers to bypass authentication, impersonate other users, or access unauthorized data. This can lead to account takeovers and unauthorized access to sensitive information.
+3. Session Management
+Description:
+Session management involves the handling of user sessions, which are created when a user logs into an application. Poor session management can lead to session hijacking, where an attacker takes over a user's session to impersonate them.
