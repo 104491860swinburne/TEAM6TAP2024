@@ -1,0 +1,5 @@
+For Broken Access Control Fixes:
+
+"Implemented role-based access control for user management module."
+"Fixed unauthorized access issue in the admin panel by enforcing session checks."
+"Added server-side validation for access permissions on restricted endpoints."
