@@ -6,4 +6,4 @@ Privilege Escalation
 
 VM downloaded is Kali Linux
 For CSRF, used bWAPP vulnerable software and tested using Burpsuite Penetration testing.
-For Privilege Escalation, used dirty cow code initially but the system crashed and don't want to risk with it anymore.  
+For Privilege Escalation, used dirty cow code initially but the system crashed and don't want to risk with it anymore and worked on kernel 
