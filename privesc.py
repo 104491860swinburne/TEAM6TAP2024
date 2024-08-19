@@ -1,63 +1,44 @@
-from zapv2 import ZAPv2
-import time
+import os
+import subprocess
 
-def setup_zap():
-    zap = ZAPv2(apikey='your_api_key_here', proxies={'http': 'http://localhost:8080', 'https': 'http://localhost:8080'})
-    return zap
-
-def test_direct_url_access(zap, base_url):
-    print("Testing Direct URL Access...")
-    restricted_urls = [
-        "/vulnerabilities/csrf/",
-        "/vulnerabilities/exec/",
-        "/vulnerabilities/upload/",
-        "/vulnerabilities/captcha/"
-    ]
-    
-    for url in restricted_urls:
-        full_url = f"{base_url}{url}"
-        response = zap.core.send_request(f"GET {full_url} HTTP/1.1\r\nHost: localhost\r\n\r\n")
-        if "200 OK" in response:
-            print(f"Potential privilege escalation via direct access: {full_url}")
-        else:
-            print(f"Access denied as expected: {full_url}")
-
-def test_form_manipulation(zap, base_url):
-    print("\nTesting Form Data Manipulation...")
-    login_url = f"{base_url}/login.php"
-    
-    # Attempt login with default low privilege credentials
-    response = zap.core.send_request(
-        f"POST {login_url} HTTP/1.1\r\nHost: localhost\r\n"
-        f"Content-Type: application/x-www-form-urlencoded\r\n\r\n"
-        f"username=user&password=password&Login=Login"
-    )
-    
-    if "Login failed" not in response:
-        print("Logged in with low privilege user")
+def find_suid_binaries():
+    """Find SUID binaries on the system."""
+    try:
+        # Use subprocess to call the 'find' command
+        result = subprocess.run(['find', '/', '-perm', '-4000', '-type', 'f', '2>/dev/null'], 
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+        suid_binaries = result.stdout.strip().split('\n')
         
-        # Try to access admin page
-        admin_url = f"{base_url}/vulnerabilities/admin/"
-        response = zap.core.send_request(f"GET {admin_url} HTTP/1.1\r\nHost: localhost\r\n\r\n")
-        
-        if "Admin Panel" in response:
-            print("Potential privilege escalation: Low privilege user accessed admin panel")
+        if not suid_binaries:
+            print("No SUID binaries found.")
         else:
-            print("Access to admin panel denied as expected")
-    else:
-        print("Failed to log in with low privilege user")
+            print("SUID binaries found:")
+            for binary in suid_binaries:
+                print(binary)
+    except Exception as e:
+        print(f"An error occurred while finding SUID binaries: {e}")
 
-def main():
-    zap = setup_zap()
-    base_url = "http://localhost/DVWA"
-    
-    # Ensure ZAP is ready
-    while not zap.core.is_in_scope(base_url):
-        zap.core.include_in_scope(base_url)
-        time.sleep(2)
-    
-    test_direct_url_access(zap, base_url)
-    test_form_manipulation(zap, base_url)
+def check_kernel_vulnerability():
+    """Check for known kernel vulnerabilities."""
+    # Basic kernel version check (Replace with specific vulnerability check if known)
+    try:
+        kernel_version = subprocess.check_output('uname -r', shell=True).decode().strip()
+        print(f"Kernel version: {kernel_version}")
+        
+        # Example: Check for specific known vulnerabilities
+        # Note: This is a placeholder. Replace with real checks if needed.
+        vulnerable_versions = ['4.4.0', '4.9.0']  # Example versions (replace with actual versions)
+        for version in vulnerable_versions:
+            if version in kernel_version:
+                print(f"Kernel version {kernel_version} is known to be vulnerable.")
+                return
+        
+        print("No known vulnerabilities detected in the kernel version.")
+    except Exception as e:
+        print(f"An error occurred while checking kernel vulnerabilities: {e}")
 
 if __name__ == "__main__":
-    main()
+    print("Starting SUID binary and kernel vulnerability check...\n")
+    find_suid_binaries()
+    print("\n")
+    check_kernel_vulnerability()
