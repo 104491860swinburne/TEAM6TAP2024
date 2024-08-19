@@ -11,7 +11,7 @@ action=change
 action = change
 login=bee
 
-3)Attacker can chamge login name.show demo.
+3)Attacker can change login name.show demo.
 4)show this msg "The secret has been changed!"
 
 Insecure DOR (Reset Secret)
@@ -34,5 +34,7 @@ most important
 4)see demo.
 
 Attacker booking 10 tickets and Attacker pay only 30EUR.
+
+I try to exploit broken access control here.
 
 
